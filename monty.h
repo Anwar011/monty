@@ -48,5 +48,10 @@ typedef struct anwarvariable
 
 extern global var1;
 
+void error_push(stack_t **stack, unsigned int line_num);
+
+void pall(stack_t **stack, unsigned int line_number);
+void error_pall(stack_t **stack, unsigned int line_num);
+
 #endif
 
