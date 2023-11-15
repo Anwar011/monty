@@ -1,29 +1,38 @@
 #include "monty.h"
 /**
-* push - that push at top
-* @stack: pointer to stack
-* @line_number: giver number of line
+ * push - add node to the stack
+ * @head: stack head
+ * @line_number: line_number
+ * Return: no return
 */
-void push(stack_t **stack, unsigned int line_number)
+void push(stack_t **head, unsigned int line_number)
 {
-	char *value = NULL;
+	int n, j = 0, flag = 0;
 
-	value = strtok(NULL, " ");
-	if (value && isinteger(value))
+	if (var.arg)
 	{
-		var1.val_read = atoi(value);
-		if (!strcmp(var1.type, "queue"))
+		if (var.arg[0] == '-')
+			j++;
+		for (; var.arg[j] != '\0'; j++)
 		{
-			if (!pushqueue(stack, var1.val_read))
-				error_memory(stack, line_number);
-		}
-		else
-		{
-			if (!pushstack(stack, var1.val_read))
-				error_memory(stack, line_number);
-		}
-	}
+			if (var.arg[j] > 57 || var.arg[j] < 48)
+				flag = 1; }
+		if (flag == 1)
+		{ fprintf(stderr, "L%d: usage: push integer\n", line_number);
+			fclose(var.file);
+			free(var.content);
+			free_stack(*head);
+			exit(EXIT_FAILURE); }}
 	else
-		error_push(stack, line_number);
+	{ fprintf(stderr, "L%d: usage: push integer\n", line_number);
+		fclose(var.file);
+		free(var.content);
+		free_stack(*head);
+		exit(EXIT_FAILURE); }
+	n = atoi(var.arg);
+	if (var.lifi == 0)
+		addnode(head, n);
+	else
+		addqueue(head, n);
 }
 
