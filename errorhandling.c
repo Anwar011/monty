@@ -1,8 +1,8 @@
 #include "monty.h"
 
 /**
- * error - Prints appropiate error messages determined by their error code.
- * @error_c: The error codes are the following:
+ * err - Prints appropiate error messages determined by their error code.
+ * @error_code: The error codes are the following:
  * (1) => The user does not give any file or more than one file to the program.
  * (2) => The file provided is not a file that can be opened or read.
  * (3) => The file provided contains an invalid instruction.
@@ -12,14 +12,14 @@
  * (7) => When the stack it empty for pop.
  * (8) => When stack is too short for operation.
  */
-void error(int error_c, ...)
+void err(int error_code, ...)
 {
 	va_list ag;
 	char *op;
 	int l_num;
 
-	va_start(ag, error_c);
-	switch (error_c)
+	va_start(ag, error_code);
+	switch (error_code)
 	{
 		case 1:
 			fprintf(stderr, "USAGE: monty file\n");
@@ -48,20 +48,20 @@ void error(int error_c, ...)
 
 /**
  * more_error - handles errors.
- * @error_c: The error codes are the following:
+ * @error_code: The error codes are the following:
  * (6) => When the stack it empty for pint.
  * (7) => When the stack it empty for pop.
  * (8) => When stack is too short for operation.
  * (9) => Division by zero.
  */
-void more_error(int error_c, ...)
+void more_error(int error_code, ...)
 {
 	va_list ag;
 	char *op;
 	int l_num;
 
-	va_start(ag, error_c);
-	switch (error_c)
+	va_start(ag, error_code);
+	switch (error_code)
 	{
 		case 6:
 			fprintf(stderr, "L%d: can't pint, stack empty\n",
@@ -88,19 +88,19 @@ void more_error(int error_c, ...)
 }
 
 /**
- * string_error - handles errors.
- * @error_c: The error codes are the following:
+ * string_err - handles errors.
+ * @error_code: The error codes are the following:
  * (10) ~> The number inside a node is outside ASCII bounds.
  * (11) ~> The stack is empty.
  */
-void string_error(int error_c, ...)
+void string_err(int error_code, ...)
 {
 	va_list ag;
 	int l_num;
 
-	va_start(ag, error_c);
+	va_start(ag, error_code);
 	l_num = va_arg(ag, int);
-	switch (error_c)
+	switch (error_code)
 	{
 		case 10:
 			fprintf(stderr, "L%d: can't pchar, value out of range\n", l_num);
