@@ -1,17 +1,13 @@
 #ifndef MONTY_H
 #define MONTY_H
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
-#include <dirent.h>
-
-#define EXIT_FAILURE 1
-#define EXIT_SUCCESS 0
-#define MAX_LENGTH 256
+#include <stdlib.h>
+#include <ctype.h>
+#include <stdarg.h>
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -24,9 +20,9 @@
  */
 typedef struct stack_s
 {
-		int n;
-		struct stack_s *prev;
-		struct stack_s *next;
+        int n;
+        struct stack_s *prev;
+        struct stack_s *next;
 } stack_t;
 
 /**
@@ -39,88 +35,50 @@ typedef struct stack_s
  */
 typedef struct instruction_s
 {
-		char *opcode;
-		void (*f)(stack_t **stack, unsigned int line_number);
+        char *opcode;
+        void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
+extern stack_t *head;
+typedef void (*op_func)(stack_t **, unsigned int);
 
-/**
- * struct omarvar - global variabels
- * @val_read: the value readed
- * @line_read: the line readed
- * @file_read: the stream of the file readed
- * @type: define type of storing set stack as default
- * Description: the global variables that we used
- */
-typedef struct omarvar
-{
-	int val_read;
-	char *line_read;
-	FILE *file_read;
-	char *type;
-} glob;
+/*file operations*/
+void open_file(char *file_name);
+int parse_line(char *buffer, int line_number, int format);
+void read_file(FILE *);
+int len_chars(FILE *);
+void find_func(char *, char *, int, int);
 
-extern glob var1;
+/*Stack operations*/
+stack_t *create_node(int n);
+void free_nodes(void);
+void print_stack(stack_t **, unsigned int);
+void add_to_stack(stack_t **, unsigned int);
+void add_to_queue(stack_t **, unsigned int);
 
+void call_fun(op_func, char *, char *, int, int);
 
-stack_t *pushstack(stack_t **head, int n);
-stack_t *pushqueue(stack_t **head, int n);
-void error_memory(stack_t **stack, unsigned int line_num);
+void print_top(stack_t **, unsigned int);
+void pop_top(stack_t **, unsigned int);
+void nop(stack_t **, unsigned int);
+void swap_nodes(stack_t **, unsigned int);
 
-void free_dlistint(stack_t *head);
+/*Math operations with nodes*/
+void add_nodes(stack_t **, unsigned int);
+void sub_nodes(stack_t **, unsigned int);
+void div_nodes(stack_t **, unsigned int);
+void mul_nodes(stack_t **, unsigned int);
+void mod_nodes(stack_t **, unsigned int);
 
-void getinstruction(instruction_t *instructions);
+/*String operations*/
+void print_char(stack_t **, unsigned int);
+void print_str(stack_t **, unsigned int);
+void rotl(stack_t **, unsigned int);
 
-void push(stack_t **stack, unsigned int line_number);
-void error_push(stack_t **stack, unsigned int line_num);
-
-void pall(stack_t **stack, unsigned int line_number);
-void error_unknown(stack_t **stack, unsigned int line_num);
-
-void pint(stack_t **stack, unsigned int line_number);
-void error_pint(stack_t **stack, unsigned int line_num);
-
-void pop(stack_t **stack, unsigned int line_number);
-void error_pop(stack_t **stack, unsigned int line_num);
-
-void swap(stack_t **stack, unsigned int line_number);
-void error_swap(stack_t **stack, unsigned int line_num);
-
-void add(stack_t **stack, unsigned int line_number);
-void error_add(stack_t **stack, unsigned int line_num);
-
-void nop(stack_t **stack, unsigned int line_number);
-
-void sub(stack_t **stack, unsigned int line_number);
-void error_sub(stack_t **stack, unsigned int line_num);
-
-void _div(stack_t **stack, unsigned int line_number);
-void error_div(stack_t **stack, unsigned int line_num);
-
-void mul(stack_t **stack, unsigned int line_number);
-void error_mul(stack_t **stack, unsigned int line_num);
-
-void mod(stack_t **stack, unsigned int line_number);
-void error_mod(stack_t **stack, unsigned int line_num);
-
-void error_math(stack_t **stack, unsigned int line_num);
-
-void pchar(stack_t **stack, unsigned int line_number);
-void error_pchar_empty(stack_t **stack, unsigned int line_num);
-void error_not_char(stack_t **stack, unsigned int line_num);
-
-void pstr(stack_t **stack, unsigned int line_number);
-
-void rotl(stack_t **stack, unsigned int line_number);
-
-void rotr(stack_t **stack, unsigned int line_number);
-
-void queue(stack_t **stack, unsigned int line_number);
-void stack(stack_t **stack, unsigned int line_number);
-
-int _isdigit(int c);
-int isinteger(char *str);
-char *ignore_spaces(char *old_line);
-
+/*Error hanlding*/
+void err(int error_code, ...);
+void more_err(int error_code, ...);
+void string_err(int error_code, ...);
+void rotr(stack_t **, unsigned int);
 
 #endif
