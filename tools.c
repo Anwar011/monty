@@ -1,62 +1,62 @@
 #include "monty.h"
 
 /**
- * open_file - opens a file
- * @file_name: the file namepath
+ * openf - opens a file
+ * @fname: the file namepath
  * Return: void
  */
 
-void open_file(char *file_name)
+void openf(char *fname)
 {
-	FILE *fd = fopen(file_name, "r");
+	FILE *fd = fopen(fname, "r");
 
-	if (file_name == NULL || fd == NULL)
-		err(2, file_name);
+	if (fname == NULL || fd == NULL)
+		err(2, fname);
 
-	read_file(fd);
+	fread(fd);
 	fclose(fd);
 }
 
 
 /**
- * read_file - reads a file
+ * fread - reads a file
  * @fd: pointer to file descriptor
  * Return: void
  */
 
-void read_file(FILE *fd)
+void fread(FILE *fd)
 {
 	int line_number, format = 0;
-	char *buffer = NULL;
+	char *br = NULL;
 	size_t len = 0;
 
-	for (line_number = 1; getline(&buffer, &len, fd) != -1; line_number++)
+	for (line_number = 1; getline(&br, &len, fd) != -1; line_number++)
 	{
-		format = parse_line(buffer, line_number, format);
+		format = parse(br, line_number, format);
 	}
-	free(buffer);
+	free(br);
 }
 
 
 /**
- * parse_line - Separates each line into tokens to determine
+ * parse - Separates each line into tokens to determine
  * which function to call
- * @buffer: line from the file
+ * @br: line from the file
  * @line_number: line number
  * @format:  storage format. If 0 Nodes will be entered as a stack.
  * if 1 nodes will be entered as a queue.
  * Return: Returns 0 if the opcode is stack. 1 if queue.
  */
 
-int parse_line(char *buffer, int line_number, int format)
+int parse(char *br, int line_number, int format)
 {
 	char *opcode, *value;
 	const char *delim = "\n ";
 
-	if (buffer == NULL)
+	if (br == NULL)
 		err(4);
 
-	opcode = strtok(buffer, delim);
+	opcode = strtok(br, delim);
 	if (opcode == NULL)
 		return (format);
 	value = strtok(NULL, delim);
@@ -66,12 +66,12 @@ int parse_line(char *buffer, int line_number, int format)
 	if (strcmp(opcode, "queue") == 0)
 		return (1);
 
-	find_func(opcode, value, line_number, format);
+	ffind(opcode, value, line_number, format);
 	return (format);
 }
 
 /**
- * find_func - find the appropriate function for the opcode
+ * ffind - find the appropriate function for the opcode
  * @opcode: opcode
  * @value: argument of opcode
  * @format:  storage format. If 0 Nodes will be entered as a stack.
@@ -79,7 +79,7 @@ int parse_line(char *buffer, int line_number, int format)
  * if 1 nodes will be entered as a queue.
  * Return: void
  */
-void find_func(char *opcode, char *value, int ln, int format)
+void ffind(char *opcode, char *value, int ln, int format)
 {
 	int i;
 	int flag;
@@ -110,7 +110,7 @@ void find_func(char *opcode, char *value, int ln, int format)
 	{
 		if (strcmp(opcode, func_list[i].opcode) == 0)
 		{
-			call_fun(func_list[i].f, opcode, value, ln, format);
+			call_function(func_list[i].f, opcode, value, ln, format);
 			flag = 0;
 		}
 	}
@@ -120,7 +120,7 @@ void find_func(char *opcode, char *value, int ln, int format)
 
 
 /**
- * call_fun - Calls the required function.
+ * call_function - Calls the required function.
  * @func: Pointer to the function that is about to be called.
  * @op: string representing the opcode.
  * @val: string representing a numeric value.
@@ -128,7 +128,7 @@ void find_func(char *opcode, char *value, int ln, int format)
  * @format: Format specifier. If 0 Nodes will be entered as a stack.
  * if 1 nodes will be entered as a queue.
  */
-void call_fun(op_func func, char *op, char *val, int ln, int format)
+void call_function(op_func func, char *op, char *val, int ln, int format)
 {
 	stack_t *node;
 	int flag;

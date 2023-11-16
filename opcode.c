@@ -45,11 +45,11 @@ void print_stack(stack_t **stack, unsigned int line_number)
 }
 
 /**
- * pop_top - Adds a node to the stack.
+ * addtop - Adds a node to the stack.
  * @stack: Pointer to a pointer pointing to top node of the stack.
  * @line_number: Interger representing the line number of of the opcode.
  */
-void pop_top(stack_t **stack, unsigned int line_number)
+void addtop(stack_t **stack, unsigned int line_number)
 {
 	stack_t *tmp;
 
